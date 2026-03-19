@@ -1,20 +1,94 @@
-name: my_project
+name: Analytics
 version: 1.0
 config-version: 2
- 
-profile: my_profile
- 
+
+#profile: snowflake_profile
+
+# Paths
 model-paths: ["models"]
 seed-paths: ["seeds"]
 test-paths: ["tests"]
-analysis-paths: ["analysis"]
+analysis-paths: ["analyses"] 
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
- 
+
 clean-targets:
   - "target"
   - "dbt_packages"
- 
+
+# Models configuration
 models:
   my_project:
-    +materialized: view
+
+    
+    landing:
+      +materialized: view
+      +schema: LANDING
+
+    
+    staging:
+      +materialized: incremental
+      +schema: STAGING
+      
+    transform:
+      +materialized: incremental
+      +schema: INT
+
+    mart:
+      +schema: MART
+
+     
+      dimensions:
+        +materialized: view
+        +incremental_strategy: merge
+
+        dim_customers:
+          +unique_key: customer_id
+
+        dim_products:
+          +unique_key: product_id
+
+        dim_stores:
+          +unique_key: store_id
+
+        dim_date:
+          +materialized: table   # static
+
+     
+      facts:
+        +materialized: view
+        +incremental_strategy: merge
+
+        fact_orders:
+          +unique_key: order_id
+
+
+seeds:
+  my_project:
+    +schema: SEED_DATA
+
+
+snapshots:
+  my_project:
+    +target_schema: SNAPSHOT
+
+
+data_tests:
+  +store_failures: true
+  +schema: TEST_FAILURES
+
+
+vars:
+  load_type: "incremental"
+  timezone: "UTC"
+
+
+on-run-start:
+  - "ALTER SESSION SET TIMEZONE = 'UTC'"
+
+
+quoting:
+  database: false
+  schema: false
+  identifier: false
+ 

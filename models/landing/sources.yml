@@ -1,0 +1,21 @@
+version: 2
+ 
+sources:
+  - name: raw
+    database: DEMO_DB
+    schema: LANDING
+ 
+    tables:
+      - name: CUSTOMERS
+        description: "Raw customers data from source system"
+ 
+      - name: PRODUCTS
+        description: "Raw products data"
+ 
+      - name: STORES
+        description: "Store information"
+ 
+      - name: DATE
+        description: "Date dimension source table"
+ 
+      - name: SALES
