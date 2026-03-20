@@ -8,7 +8,8 @@ WITH source_data AS (
         COALESCE(QUANTITY, 1)               AS quantity,
         COALESCE(UNIT_PRICE, 0)             AS unit_price,
         COALESCE(DISCOUNT, 0)               AS discount,
-        UPPER(TRIM(PAYMENT_TYPE))           AS payment_type
+        UPPER(TRIM(PAYMENT_TYPE))           AS payment_type,
+        CREATED_AT                          AS created_at
     FROM {{ source('raw','SALES') }}
 ),
 deduplicated AS (
@@ -28,6 +29,7 @@ SELECT
     quantity,
     unit_price,
     discount,
-    payment_type
+    payment_type,
+    created_at  
 FROM deduplicated
 WHERE rn = 1

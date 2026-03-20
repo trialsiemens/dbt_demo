@@ -18,7 +18,7 @@ clean-targets:
 
 # Models configuration
 models:
-  my_project:
+  Analytics:
 
     
     landing:
@@ -38,44 +38,19 @@ models:
       +schema: MART
 
      
-      dimensions:
-        +materialized: view
-        +incremental_strategy: merge
-
-        dim_customers:
-          +unique_key: customer_id
-
-        dim_products:
-          +unique_key: product_id
-
-        dim_stores:
-          +unique_key: store_id
-
-        dim_date:
-          +materialized: table   # static
-
-     
-      facts:
-        +materialized: view
-        +incremental_strategy: merge
-
-        fact_orders:
-          +unique_key: order_id
-
-
 seeds:
-  my_project:
+  Analytics:
     +schema: SEED_DATA
 
 
 snapshots:
-  my_project:
-    +target_schema: SNAPSHOT
+  Analytics:
+    +schema: MART
 
 
 data_tests:
   +store_failures: true
-  +schema: TEST_FAILURES
+  +schema: TEST
 
 
 vars:
