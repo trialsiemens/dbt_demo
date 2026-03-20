@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleansed customers from landing"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+
+      - name: email
+        tests:
+          - not_null
+
+      - name: gender
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['FEMALE', 'MALE']
+
+      - name: DATE_OF_BIRTH
+        tests:
+          - not_null
+          - not_in_future:   # custom generic test (we will create below)
+              column_name: DATE_OF_BIRTH
+
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+      - name: UNIT_COST
+        tests:
+          - not_null
+
+  - name: stg_stores
+    columns:
+      - name: store_id
+        tests:
+          - not_null
+
+
+  - name: stg_sales
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: store_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stores')
+                field: store_id
+
+      - name: payment_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['CARD', 'CASH', 'UPI']
+
+      - name: quantity
+        tests:
+          - not_null
+
+      - name: order_date
+        tests:
+          - not_in_future:
+              column_name: order_date

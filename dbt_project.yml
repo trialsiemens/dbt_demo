@@ -1,0 +1,69 @@
+name: Analytics
+version: 1.0
+config-version: 2
+
+#profile: snowflake_profile
+
+# Paths
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"] 
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Models configuration
+models:
+  Analytics:
+
+    
+    landing:
+      +materialized: view
+      +schema: LANDING
+
+    
+    staging:
+      +materialized: incremental
+      +schema: STAGING
+      
+    transform:
+      +materialized: incremental
+      +schema: INT
+
+    mart:
+      +schema: MART
+
+     
+seeds:
+  Analytics:
+    +schema: SEED_DATA
+
+
+snapshots:
+  Analytics:
+    +schema: MART
+
+
+data_tests:
+  +store_failures: true
+  +schema: TEST
+
+
+vars:
+  load_type: "incremental"
+  timezone: "UTC"
+
+
+on-run-start:
+  - "ALTER SESSION SET TIMEZONE = 'UTC'"
+
+
+quoting:
+  database: false
+  schema: false
+  identifier: false
+ 

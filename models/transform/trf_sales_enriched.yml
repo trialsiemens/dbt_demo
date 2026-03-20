@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: trf_sales_enriched
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+
+      - name: product_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: store_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_stores')
+                field: store_id
+
+      - name: gender
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['MALE', 'FEMALE']
